@@ -42,7 +42,7 @@ export default function GameBoard() {
 
     if (marioRef.current) {
       marioRef.current.classList.add('jump');
-      setTimeout(() => marioRef.current.classList.remove('jump'), 550);
+      setTimeout(() => marioRef.current.classList.remove('jump'), 600);
     }
   };
 
@@ -53,10 +53,7 @@ export default function GameBoard() {
   useEffect(() => {
     const scoreInterval = setInterval(() => {
       if (!gameOverRef.current) {
-        setScore((prev) => {
-          document.getElementById('score').innerText = `Score: ${prev + 1}`;
-          return prev + 1;
-        });
+        setScore((prev) => prev + 1);
       }
     }, 100);
 
@@ -64,7 +61,6 @@ export default function GameBoard() {
       if (gameOverRef.current) return;
       setDifficulty((prev) => {
         const next = prev + 1;
-        document.getElementById('difficulty').innerText = `Nível: ${next}`;
         const speed = Math.max(2.4 - next * 0.2, 0.6);
         if (pipeRef.current) {
           pipeRef.current.style.animationDuration = `${speed}s`;
@@ -146,7 +142,7 @@ export default function GameBoard() {
       clearInterval(scoreInterval);
       clearInterval(difficultyInterval);
     };
-  }, [score]);
+  }, []); // <-- só monta uma vez
 
   return (
     <div className="game-board">
@@ -157,6 +153,9 @@ export default function GameBoard() {
       <img src={clouds} className="clouds" alt="nuvens" />
       <img ref={marioRef} src={mario} className="mario" alt="mario" />
       <img ref={pipeRef} src={pipe} className="pipe" alt="tubo" />
+
+      <div id="score"><h1>Score: {score}</h1></div>
+      <div id="difficulty"><h2>Nível: {difficulty}</h2></div>
 
       {showRestart && (
         <button className="restart-button" onClick={restartGame}>
